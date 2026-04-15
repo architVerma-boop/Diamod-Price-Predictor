@@ -496,56 +496,56 @@ elif S.step == 1:
             </div>""", unsafe_allow_html=True)
 
         # PCA Visualization
-            if len(features) >= 2:
-                st.markdown("<br>**📊 PCA Shape of Data**", unsafe_allow_html=True)
-                try:
-                    from sklearn.preprocessing import StandardScaler
-                    from sklearn.decomposition import PCA
-                    from sklearn.preprocessing import LabelEncoder
+            # if len(features) >= 2:
+            #     st.markdown("<br>**📊 PCA Shape of Data**", unsafe_allow_html=True)
+            #     try:
+            #         from sklearn.preprocessing import StandardScaler
+            #         from sklearn.decomposition import PCA
+            #         from sklearn.preprocessing import LabelEncoder
     
-                    pca_df = df[features].copy()
-                    # Encode categoricals
-                    for c in pca_df.select_dtypes(exclude=np.number).columns:
-                        pca_df[c] = LabelEncoder().fit_transform(pca_df[c].astype(str))
-                    pca_df = pca_df.fillna(pca_df.mean())
-                    scaler = StandardScaler()
-                    Xs = scaler.fit_transform(pca_df)
-                    n_comp = min(3, Xs.shape[1], Xs.shape[0])
-                    pca = PCA(n_components=n_comp)
-                    comps = pca.fit_transform(Xs)
-                    expl = pca.explained_variance_ratio_
+            #         pca_df = df[features].copy()
+            #         # Encode categoricals
+            #         for c in pca_df.select_dtypes(exclude=np.number).columns:
+            #             pca_df[c] = LabelEncoder().fit_transform(pca_df[c].astype(str))
+            #         pca_df = pca_df.fillna(pca_df.mean())
+            #         scaler = StandardScaler()
+            #         Xs = scaler.fit_transform(pca_df)
+            #         n_comp = min(3, Xs.shape[1], Xs.shape[0])
+            #         pca = PCA(n_components=n_comp)
+            #         comps = pca.fit_transform(Xs)
+            #         expl = pca.explained_variance_ratio_
     
-                    color_vals = df[target].astype(str) if target else None
+            #         color_vals = df[target].astype(str) if target else None
     
-                    if n_comp >= 3:
-                        fig_pca = px.scatter_3d(
-                            x=comps[:, 0], y=comps[:, 1], z=comps[:, 2],
-                            color=color_vals,
-                            labels={"x": f"PC1 ({expl[0]*100:.1f}%)", "y": f"PC2 ({expl[1]*100:.1f}%)", "z": f"PC3 ({expl[2]*100:.1f}%)"},
-                            color_discrete_sequence=PALETTE, opacity=0.85
-                        )
-                    else:
-                        fig_pca = px.scatter(
-                            x=comps[:, 0], y=comps[:, 1],
-                            color=color_vals,
-                            labels={"x": f"PC1 ({expl[0]*100:.1f}%)", "y": f"PC2 ({expl[1]*100:.1f}%)"},
-                            color_discrete_sequence=PALETTE, opacity=0.85
-                        )
-                    dark_fig(fig_pca, 450)
-                    fig_pca.update_layout(title=f"PCA Projection — {sum(expl)*100:.1f}% variance explained")
-                    st.plotly_chart(fig_pca, use_container_width=True)
+            #         if n_comp >= 3:
+            #             fig_pca = px.scatter_3d(
+            #                 x=comps[:, 0], y=comps[:, 1], z=comps[:, 2],
+            #                 color=color_vals,
+            #                 labels={"x": f"PC1 ({expl[0]*100:.1f}%)", "y": f"PC2 ({expl[1]*100:.1f}%)", "z": f"PC3 ({expl[2]*100:.1f}%)"},
+            #                 color_discrete_sequence=PALETTE, opacity=0.85
+            #             )
+            #         else:
+            #             fig_pca = px.scatter(
+            #                 x=comps[:, 0], y=comps[:, 1],
+            #                 color=color_vals,
+            #                 labels={"x": f"PC1 ({expl[0]*100:.1f}%)", "y": f"PC2 ({expl[1]*100:.1f}%)"},
+            #                 color_discrete_sequence=PALETTE, opacity=0.85
+            #             )
+            #         dark_fig(fig_pca, 450)
+            #         fig_pca.update_layout(title=f"PCA Projection — {sum(expl)*100:.1f}% variance explained")
+            #         st.plotly_chart(fig_pca, use_container_width=True)
 
-                # Variance bar
-                    fig_var = px.bar(
-                        x=[f"PC{i+1}" for i in range(len(expl))],
-                        y=expl * 100,
-                        color_discrete_sequence=[PALETTE[0]],
-                        labels={"x": "Component", "y": "Explained Variance (%)"}
-                    )
-                    dark_fig(fig_var, 200)
-                    st.plotly_chart(fig_var, use_container_width=True)
-                except Exception as e:
-                    st.markdown(f'<div class="warn-box">⚠️ PCA failed: {e}</div>', unsafe_allow_html=True)
+            #     # Variance bar
+            #         fig_var = px.bar(
+            #             x=[f"PC{i+1}" for i in range(len(expl))],
+            #             y=expl * 100,
+            #             color_discrete_sequence=[PALETTE[0]],
+            #             labels={"x": "Component", "y": "Explained Variance (%)"}
+            #         )
+            #         dark_fig(fig_var, 200)
+            #         st.plotly_chart(fig_var, use_container_width=True)
+            #     except Exception as e:
+            #         st.markdown(f'<div class="warn-box">⚠️ PCA failed: {e}</div>', unsafe_allow_html=True)
     
             with st.expander("🔍 Preview Data"):
                 st.dataframe(df.head(20), use_container_width=True)
